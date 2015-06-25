@@ -39,7 +39,7 @@ end
 post "/" do
   begin
     puts "[LOG] #{params}"
-    params[:text] = params[:text].sub(params[:trigger_word], "").strip 
+    params[:text] = params[:text].sub(params[:trigger_word], "").strip
     if params[:token] != ENV["OUTGOING_WEBHOOK_TOKEN"]
       response = "Invalid token"
     elsif is_channel_blacklisted?(params[:channel_name])
@@ -50,7 +50,7 @@ post "/" do
       response = respond_with_user_score(params[:user_id])
     elsif params[:text].match(/^help$/i)
       response = respond_with_help
-    elsif params[:text].match(/^clear score$/i)
+    elsif params[:text].match(/^clear leaderboard$/i)
         response = clear_scores
     elsif params[:text].match(/^show (me\s+)?(the\s+)?leaderboard$/i)
       response = respond_with_leaderboard
@@ -429,11 +429,12 @@ end
 #
 def respond_with_help
   reply = <<help
-Type `#{ENV["BOT_USERNAME"]} jeopardy me` to start a new round of Slack Jeopardy. I will pick the category and price. Anyone in the channel can respond.
+Type `#{ENV["BOT_USERNAME"]} next q` to start a new round of Slack Jeopardy. I will pick the category and price. Anyone in the channel can respond.
 Type `#{ENV["BOT_USERNAME"]} [what|where|who] [is|are] [answer]?` to respond to the active round. You have #{ENV["SECONDS_TO_ANSWER"]} seconds to answer. Remember, responses must be in the form of a question, e.g. `#{ENV["BOT_USERNAME"]} what is dirt?`.
 Type `#{ENV["BOT_USERNAME"]} what is my score` to see your current score.
 Type `#{ENV["BOT_USERNAME"]} show the leaderboard` to see the top scores.
 Type `#{ENV["BOT_USERNAME"]} show the loserboard` to see the bottom scores.
+Type `#{ENV["BOT_USERNAME"]} clear leaderboard` to reset the game.
 help
   reply
 end
