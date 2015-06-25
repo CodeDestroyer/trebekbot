@@ -39,7 +39,7 @@ end
 post "/" do
   begin
     puts "[LOG] #{params}"
-    params[:text] = params[:text].strip
+    params[:text] = params[:text].sub(params[:trigger_word], "").strip 
     if params[:token] != ENV["OUTGOING_WEBHOOK_TOKEN"]
       response = "Invalid token"
     elsif is_channel_blacklisted?(params[:channel_name])
