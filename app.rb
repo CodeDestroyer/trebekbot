@@ -39,7 +39,7 @@ end
 post "/" do
   begin
     puts "[LOG] #{params}"
-    params[:text] = params[:text].sub(params[:trigger_word], "").strip
+    params[:text] = params[:text].strip
     if params[:token] != ENV["OUTGOING_WEBHOOK_TOKEN"]
       response = "Invalid token"
     elsif is_channel_blacklisted?(params[:channel_name])
@@ -56,8 +56,6 @@ post "/" do
       response = respond_with_leaderboard
     elsif params[:text].match(/^show (me\s+)?(the\s+)?loserboard$/i)
       response = respond_with_loserboard
-    else
-      response = process_answer(params)
     end
   rescue => e
     puts "[ERROR] #{e}"
