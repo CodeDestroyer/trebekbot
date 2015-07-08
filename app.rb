@@ -51,7 +51,7 @@ post "/" do
     elsif params[:text].match(/^help$/i)
       response = respond_with_help
     elsif params[:text].match(/^clear leaderboard$/i)
-        response = clear_scores
+        response = clear_scores(params)
     elsif params[:text].match(/^show (me\s+)?(the\s+)?leaderboard$/i)
       response = respond_with_leaderboard
     elsif params[:text].match(/^show (me\s+)?(the\s+)?loserboard$/i)
@@ -440,7 +440,14 @@ help
 end
 
 
-def clear_scores
-  $redis.flushdb
-  response = "The Game has been reset."
+def clear_scores(params)
+  user_id = params[:user_id]
+  user_name = get_slack_name(user_id)
+  if (user_name == "Andrew")
+    score = update_score(user_id, -500)
+    respose = "Fuck you god damn troll, by the power of my mustache I remove $500 dollars from your score"
+  else
+    $redis.flushdb
+    response = "The Game has been reset."
+  end
 end
